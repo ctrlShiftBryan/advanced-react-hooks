@@ -1,38 +1,58 @@
 // useContext: simple Counter
 // http://localhost:3000/isolated/exercise/03.js
 
-import * as React from 'react'
+import * as React from 'react';
 
-// 🐨 create your CountContext here with React.createContext
 
-// 🐨 create a CountProvider component here that does this:
-//   🐨 get the count state and setCount updater with React.useState
-//   🐨 create a `value` array with count and setCount
-//   🐨 return your context provider with the value assigned to that array and forward all the other props
-//   💰 more specifically, we need the children prop forwarded to the context provider
 
+/// creating context start
+// create a context
+const CountContext = React.createContext()
+// create a provider function
+// provider function uses useState to return value
+// also need to pass props for children
+function CountProvider(props) {
+  const [count, setCount] = React.useState(0);
+  const value = [count, setCount];
+
+  // this I don't understand
+  return <CountContext.Provider value={value} {...props}/>
+}
+/// creating context end
+
+
+function useCount() {
+  const context = React.useContext(CountContext);
+  if (!context) { 
+    throw new Error('useCount must be used with a CountProvider');
+  }
+  return context;
+}
+
+/// using the context to read/write
+// read from context
 function CountDisplay() {
-  // 🐨 get the count from useContext with the CountContext
-  const count = 0
+  const [count] = useCount()
+  console.log({count});
   return <div>{`The current count is ${count}`}</div>
 }
 
+// write to context
 function Counter() {
-  // 🐨 get the setCount from useContext with the CountContext
-  const setCount = () => {}
+  const [, setCount] = useCount()
   const increment = () => setCount(c => c + 1)
   return <button onClick={increment}>Increment count</button>
 }
+/// using the context to read/write end
 
+// wrap it all in the provider
 function App() {
   return (
     <div>
-      {/*
-        🐨 wrap these two components in the CountProvider so they can access
-        the CountContext value
-      */}
-      <CountDisplay />
-      <Counter />
+      <CountProvider>
+        <CountDisplay />
+        <Counter />
+      </CountProvider>
     </div>
   )
 }
