@@ -4,13 +4,10 @@
 
 import * as React from 'react'
 import {
-  fetchPokemon,
-  PokemonForm,
-  PokemonDataView,
-  PokemonInfoFallback,
-  PokemonErrorBoundary,
+  fetchPokemon, PokemonDataView, PokemonErrorBoundary, PokemonForm, PokemonInfoFallback
 } from '../pokemon'
 
+// this will not call the function is the component was unmounted
 function useSafeDispatch(dispatch) {
   const mountedRef = React.useRef(false)
 
